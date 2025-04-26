@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PharmaLibrary</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #dc3545;
+            --admin: #6f42c1;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Auth Container */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+        
+        .auth-box {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .auth-box h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .auth-box .logo {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        /* Number input arrows */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary);
+        }
+        
+        .btn-admin {
+            background-color: var(--admin);
+        }
+        
+        .btn-admin:hover {
+            background-color: #5a32a3;
+        }
+        
+        /* Verification Styles */
+        .verification-section {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--light);
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .verification-code {
+            font-weight: bold;
+            color: var(--primary);
+            margin: 1rem 0;
+        }
+        
+        .error-message {
+            color: var(--danger);
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .success-message {
+            color: var(--success);
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-header {
+            background-color: var(--admin);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        
+        /* User Table */
+        .user-table-container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: var(--light);
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Container -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-box">
+            <div class="logo">PharmaLibrary</div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="login">Login</div>
+                <div class="tab" data-tab="signup">Sign Up</div>
+            </div>
+            
+            <!-- Login Form -->
+            <div class="tab-content active" id="loginTab">
+                <h1>Welcome Back</h1>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="text" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                    <div class="error-message" id="loginError">Invalid credentials</div>
+                </form>
+            </div>
+            
+            <!-- Signup Form -->
+            <div class="tab-content" id="signupTab">
+                <h1>Create Account</h1>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signupId">ID (Numbers only)</label>
+                        <input type="number" id="signupId" required pattern="\d*">
+                    </div>
+                    <div class="form-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" required minlength="8">
+                    </div>
+                    <button type="submit" class="btn" id="signupSubmitBtn">Sign Up</button>
+                    <div class="error-message" id="signupError"></div>
+                </form>
+                
+                <!-- Verification Section (hidden initially) -->
+                <div class="verification-section" id="verificationSection">
+                    <p>We've sent a verification code to your email:</p>
+                    <div class="verification-code" id="verificationCodeDisplay">5648H</div>
+                    <div class="form-group">
+                        <label for="verificationCode">Enter Verification Code</label>
+                        <input type="text" id="verificationCode" required>
+                    </div>
+                    <button type="button" class="btn" id="verifyCodeBtn">Verify Code</button>
+                    <div class="error-message" id="verificationError"></div>
+                    <div class="success-message" id="verificationSuccess"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- User Dashboard -->
+    <div class="dashboard" id="userDashboard">
+        <header>
+            <div class="logo">PharmaLibrary</div>
+            <button class="logout-btn" id="userLogoutBtn">Logout</button>
+        </header>
+        
+        <div class="user-table-container">
+            <h2>Welcome to PharmaLibrary</h2>
+            <p>Browse our collection of pharmaceutical resources.</p>
+        </div>
+    </div>
+    
+    <!-- Admin Dashboard -->
+    <div class="dashboard" id="adminDashboard">
+        <header class="admin-header">
+            <div class="logo">Admin Dashboard</div>
+            <button class="logout-btn" id="adminLogoutBtn">Logout</button>
+        </header>
+        
+        <div class="user-table-container">
+            <h2>User Activity Log</h2>
+            <table id="userActivityTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th>Login Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filled dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const ADMIN_CREDENTIALS = {
+            email: "hessen",
+            password: "hessen"
+        };
+        
+        // User Database
+        let users = [];
+        let userActivityLog = [];
+        let pendingUser = null;
+        let verificationCode = "";
+        
+        // Generate random verification code
+        function generateVerificationCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            for (let i = 0; i < 5; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+        
+        // Track user activity
+        function trackUserActivity(id, name, email, password) {
+            userActivityLog.push({
+                id,
+                name,
+                email,
+                password, // In production, you should only store hashes!
+                loginTime: new Date().toLocaleString()
+            });
+            
+            updateActivityTable();
+        }
+        
+        // Update admin table
+        function updateActivityTable() {
+            const tbody = document.querySelector('#userActivityTable tbody');
+            tbody.innerHTML = '';
+            
+            userActivityLog.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.password}</td>
+                    <td>${user.loginTime}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                this.classList.add('active');
+                document.getElementById(`${this.dataset.tab}Tab`).classList.add('active');
+            });
+        });
+        
+        // Signup Form Submission
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('signupId').value;
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            
+            // Validate ID is numbers only
+            if (!/^\d+$/.test(id)) {
+                document.getElementById('signupError').textContent = "ID must contain only numbers";
+                document.getElementById('signupError').style.display = 'block';
+                return;
+            }
+            
+            // Check if email already exists
+            if (users.some(u => u.email === email)) {
+                document.getElementById('signupError').textContent = "Email already registered";
+                document.getElementById('signupError').style.display = 'block';
+                return;
+            }
+            
+            // Check if ID already exists
+            if (users.some(u => u.id === id)) {
+                document.getElementById('signupError').textContent = "ID already registered";
+                document.getElementById('signupError').style.display = 'block';
+                return;
+            }
+            
+            // Store pending user data
+            pendingUser = { id, name, email, password };
+            
+            // Generate and display verification code
+            verificationCode = generateVerificationCode();
+            document.getElementById('verificationCodeDisplay').textContent = verificationCode;
+            
+            // Show verification section and hide form
+            document.getElementById('verificationSection').style.display = 'block';
+            document.getElementById('signupForm').style.display = 'none';
+            
+            // In a real app, you would send this code to the user's email
+            console.log(`Verification code sent to ${email}: ${verificationCode}`);
+        });
+        
+        // Verify Code Button
+        document.getElementById('verifyCodeBtn').addEventListener('click', function() {
+            const enteredCode = document.getElementById('verificationCode').value;
+            
+            if (enteredCode === verificationCode) {
+                // Code matches - create account
+                users.push(pendingUser);
+                
+                // Track the signup as a login
+                trackUserActivity(pendingUser.id, pendingUser.name, pendingUser.email, pendingUser.password);
+                
+                // Show success
+                document.getElementById('verificationError').style.display = 'none';
+                document.getElementById('verificationSuccess').textContent = "Account created successfully!";
+                document.getElementById('verificationSuccess').style.display = 'block';
+                
+                // Switch to login tab after delay
+                setTimeout(() => {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.querySelector('.tab[data-tab="login"]').classList.add('active');
+                    document.getElementById('loginTab').classList.add('active');
+                    
+                    // Reset forms
+                    document.getElementById('signupForm').reset();
+                    document.getElementById('signupForm').style.display = 'block';
+                    document.getElementById('verificationSection').style.display = 'none';
+                    document.getElementById('verificationSuccess').style.display = 'none';
+                    
+                    // Pre-fill email
+                    document.getElementById('loginEmail').value = pendingUser.email;
+                }, 1500);
+            } else {
+                document.getElementById('verificationError').textContent = "Invalid verification code";
+                document.getElementById('verificationError').style.display = 'block';
+            }
+        });
+        
+        // User Login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Check if admin login
+            if (email === ADMIN_CREDENTIALS.email) {
+                if (password === ADMIN_CREDENTIALS.password) {
+                    // Admin login
+                    trackUserActivity("ADMIN", "Admin", email, "******");
+                    document.getElementById('authContainer').style.display = 'none';
+                    document.getElementById('adminDashboard').style.display = 'block';
+                    document.getElementById('loginError').style.display = 'none';
+                } else {
+                    document.getElementById('loginError').textContent = "Invalid admin password";
+                    document.getElementById('loginError').style.display = 'block';
+                }
+            } else {
+                // Regular user login
+                const user = users.find(u => u.email === email && u.password === password);
+                if (user) {
+                    trackUserActivity(user.id, user.name, email, password);
+                    document.getElementById('authContainer').style.display = 'none';
+                    document.getElementById('userDashboard').style.display = 'block';
+                    document.getElementById('loginError').style.display = 'none';
+                } else {
+                    document.getElementById('loginError').textContent = "Invalid email or password";
+                    document.getElementById('loginError').style.display = 'block';
+                }
+            }
+        });
+        
+        // Logout
+        document.getElementById('userLogoutBtn').addEventListener('click', function() {
+            document.getElementById('userDashboard').style.display = 'none';
+            document.getElementById('authContainer').style.display = 'flex';
+        });
+        
+        document.getElementById('adminLogoutBtn').addEventListener('click', function() {
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('authContainer').style.display = 'flex';
+        });
+        
+        // Initialize
+        updateActivityTable();
+    </script>
+</body>
+</html>
